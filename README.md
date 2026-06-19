@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# RefactorBot 🤖 – Agent Society for Code Refactoring
 
-# Run and deploy your AI Studio app
+**Track:** Agent Society (Track 3) – Global AI Hackathon with Qwen Cloud
 
-This contains everything you need to run your app locally.
+## Overview
+RefactorBot is a multi-agent system that autonomously refactors legacy code into modern frameworks. Five specialized AI agents collaborate, negotiate, and resolve conflicts to deliver production-ready code.
 
-View your app in AI Studio: https://ai.studio/apps/16e9e4da-d9ff-4773-9d67-3067754aabc0
+## The Agent Society
+| Agent | Role |
+|-------|------|
+| **Parser** | Extracts structure from legacy code (functions, classes, imports). |
+| **Architect** | Designs the target framework structure (routes, models, dependencies). |
+| **Dev** | Writes the actual code based on the Architect's plan. |
+| **QA** | Reviews code for syntax errors, missing imports, and logic flaws. |
+| **Reviewer** | Mediates when QA rejects code – provides fix instructions. |
 
-## Run Locally
+## How It Works
+1. User provides legacy code + target framework (e.g., FastAPI).
+2. Parser extracts structure → Architect designs plan → Dev writes code.
+3. QA reviews → if rejected, Reviewer provides feedback → Dev rewrites.
+4. Loop continues until QA approves or max attempts (3) reached.
+5. Approved code is saved to `output/` and optionally uploaded to Alibaba OSS.
 
-**Prerequisites:**  Node.js
+## Tech Stack
+- **Language:** TypeScript (Node.js)
+- **AI:** Qwen Plus (via Qwen Cloud API)
+- **Cloud:** Alibaba Cloud Function Compute + OSS (optional)
 
+## Setup & Run Locally
+```bash
+# Install dependencies
+npm install
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# Add your Qwen API key
+cp .env.example .env
+# Edit .env with your QWEN_API_KEY
+
+# Run the orchestrator
+npm run dev
