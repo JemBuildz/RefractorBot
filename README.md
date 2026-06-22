@@ -31,6 +31,7 @@ Code is only output to the user once it survives this loop and passes the QA Eng
 
 ```mermaid
 graph TD
+    A --> B
     %% Styling
     classDef user fill:#3b82f6,stroke:#1e40af,stroke-width:2px,color:#fff;
     classDef cloud fill:#f97316,stroke:#c2410c,stroke-width:2px,color:#fff;
@@ -65,81 +66,75 @@ graph TD
     H -.->|API Call| Q
 
     I -->|JSON Response| A
-
+```
 ## 🛠️ Tech Stack
+AI Brain: Alibaba Cloud DashScope API (Qwen Large Language Models)
 
-* **AI Brain:** Alibaba Cloud DashScope API (Qwen Large Language Models)
-* **Orchestration:** Node.js / Express built with TypeScript
-* **Infrastructure:** Alibaba Cloud Function Compute (Custom Runtime, Serverless)
-* **Frontend:** HTML/CSS/JS Glassmorphism UI rendering real-time JSON timeline logs to visualize agent negotiations.
+Orchestration: Node.js / Express built with TypeScript
 
----
+Infrastructure: Alibaba Cloud Function Compute (Custom Runtime, Serverless)
+
+Frontend: HTML/CSS/JS Glassmorphism UI rendering real-time JSON timeline logs to visualize agent negotiations.
 
 ## 🚀 Setup & Local Deployment
+Prerequisites
+Node.js (v18+)
 
-### Prerequisites
+An Alibaba Cloud Account & DashScope API Key
 
-* Node.js (v18+)
-* An Alibaba Cloud Account & DashScope API Key
-* TypeScript
+TypeScript
 
-### Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/yourusername/refactorbot-society.git](https://github.com/yourusername/refactorbot-society.git)
-    cd refactorbot-society
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Create a `.env` file in the root directory:**
-    ```env
-    QWEN_API_KEY=your_dashscope_api_key_here
-    PORT=9000
-    ```
-
-4.  **Build the TypeScript files:**
-    ```bash
-    npm run build
-    ```
-
-5.  **Start the local server:**
-    ```bash
-    npm start
-    ```
-
----
-
+Installation
+Clone the repository:
+```Bash
+git clone [https://github.com/yourusername/refactorbot-society.git](https://github.com/yourusername/refactorbot-society.git)
+cd refactorbot-society
+```
+Install dependencies:
+```Bash
+npm install
+Create a .env file in the root directory:
+Code snippet
+QWEN_API_KEY=your_dashscope_api_key_here
+PORT=9000
+Build the TypeScript files:
+```
+```Bash
+npm run build
+Start the local server:
+npm start
+```
 ## ☁️ Alibaba Cloud Deployment Guide
+This project is configured specifically for Alibaba Cloud Function Compute (Custom Runtime).
 
-This project is configured specifically for **Alibaba Cloud Function Compute (Custom Runtime)**.
+Run npm run build to generate the updated dist folder.
 
-1.  Run `npm run build` to generate the updated `dist` folder.
-2.  Select the following 4 items in your file explorer:
-    * `dist/` (folder)
-    * `node_modules/` (folder)
-    * `package.json`
-    * `.env`
-3.  Compress these 4 items directly into a `.zip` file (Do not zip the parent folder, zip the items themselves).
-4.  Upload the `deploy.zip` file to your Alibaba Cloud Function Compute instance.
-5.  Ensure the Function Start Command is set to: `node dist/server.js`
+Select the following 4 items in your file explorer:
 
----
+dist/ (folder)
+
+node_modules/ (folder)
+
+package.json
+
+.env
+
+Compress these 4 items directly into a .zip file (Do not zip the parent folder, zip the items themselves).
+
+Upload the deploy.zip file to your Alibaba Cloud Function Compute instance.
+
+Ensure the Function Start Command is set to: node dist/server.js
 
 ## ⚙️ Advanced Configuration: Tuning the Agent Society
-
 By default, the RefactorBot Society is configured to allow a maximum of 3 negotiation cycles between the Developer and the QA Engineer. If the QA Engineer is not satisfied by the third attempt, the loop terminates to prevent infinite API calls and runaway cloud costs.
 
 You can easily tune this limit to give the Developer agent more chances to fix highly complex legacy code.
 
-### 1. Adjusting the Cycle Limit
-Open `src/orchestrator.ts` and locate the `MAX_ATTEMPTS` constant in the `runRefactorBot` function:
-
-```typescript
+1. Adjusting the Cycle Limit
+Open src/orchestrator.ts and locate the MAX_ATTEMPTS constant in the runRefactorBot function:
+```
+TypeScript
 // src/orchestrator.ts
 let approved = false;
 let attempts = 0;
@@ -148,28 +143,31 @@ const MAX_ATTEMPTS = 3; // Increase this number to allow more negotiation cycles
 while (!approved && attempts < MAX_ATTEMPTS) {
     // ... agent loop ...
 }
+```
+2. Synchronizing Cloud Timeouts
+If you increase the MAX_ATTEMPTS, you must also increase your Alibaba Cloud Function Compute execution timeout. An extended AI debate will trigger a serverless timeout if not properly configured.
 
-### 2. Synchronizing Cloud Timeouts
-If you increase the `MAX_ATTEMPTS`, you must also increase your Alibaba Cloud Function Compute execution timeout. An extended AI debate will trigger a serverless timeout if not properly configured.
+Rule of Thumb: Allow approximately 90–100 seconds per cycle.
 
-**Rule of Thumb:** Allow approximately 90–100 seconds per cycle.
+3 Cycles (Default): Set Alibaba Cloud Timeout to 300 seconds (5 minutes).
 
-* **3 Cycles (Default):** Set Alibaba Cloud Timeout to **300 seconds** (5 minutes).
-* **5 Cycles:** Set Alibaba Cloud Timeout to **600 seconds** (10 minutes).
+5 Cycles: Set Alibaba Cloud Timeout to 600 seconds (10 minutes).
 
-**To update the timeout in Alibaba Cloud:**
-1. Navigate to your Function Compute console.
-2. Select your function and click **Configurations**.
-3. Under Basic Settings, change the **Execution Timeout Period**.
-4. Save and deploy the new configuration.
+To update the timeout in Alibaba Cloud:
 
----
+Navigate to your Function Compute console.
+
+Select your function and click Configurations.
+
+Under Basic Settings, change the Execution Timeout Period.
+
+Save and deploy the new configuration.
+
 
 ## 👨‍💻 Author
-**Jeremy Codjoe** — Technology Operations Analyst & Creator of JemBuildz  
-*Track 3 Submission for the Agent Society Hackathon.*
+Jeremy Codjoe — Creator of JemBuildz
 
----
+## Track 3 Submission for the Agent Society Hackathon.
 
 ## 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
